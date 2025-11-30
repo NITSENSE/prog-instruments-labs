@@ -10,8 +10,10 @@ image3 = 'finance.png'
 
 
 class Menu:
+    """Класс главного меню библиотечного приложения."""
 
     def __init__(self):
+        """Инициализирует главное окно приложения и создает базу данных."""
         self.root = tk.Tk()
         self.root.title('Menu')
         self.root.state('zoomed')
@@ -38,6 +40,7 @@ class Menu:
         self.root.mainloop()
         
     def create_canvas(self, images):
+        """Создает холст с фоновым изображением на весь экран."""
         w = self.root.winfo_screenwidth()
         h = self.root.winfo_screenheight()
         photo = Image.open(images)
@@ -51,6 +54,7 @@ class Menu:
         return self.canvas
     
     def book(self):
+        """Открывает меню управления книгами."""
         self.content_frame.destroy()
         self.content_frame = self.create_canvas(image2)
         btn_add_books = tk.Button(self.content_frame, text='Add Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.add_book).place(x=12, y=100)
@@ -59,6 +63,7 @@ class Menu:
         btn_main_menu = tk.Button(self.content_frame, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=500)
 
     def add_book(self):
+        """Создает окно для добавления новой книги."""
         self.aid = tk.StringVar()
         self.aauthor = tk.StringVar()
         self.aname = tk.StringVar()
@@ -84,13 +89,16 @@ class Menu:
         btn_back = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.go_back).place(x=350, y=400)
 
     def go_back(self):
+        """Закрывает текущее окно и возвращается к предыдущему."""
         self.f1.destroy()
 
     def main_menu(self):
+        """Возвращает пользователя в главное меню."""
         self.root.destroy()
         a = Menu()
 
     def add_data(self):
+        """Добавляет новую книгу в базу данных."""
         book_id = self.aid.get()
         book_title = self.aname.get()
         author = self.aauthor.get()
@@ -111,6 +119,7 @@ class Menu:
         connection.close()
 
     def search(self):
+        """Создает окно поиска книг."""
         self.sid = tk.StringVar()
         self.f1 = tk.Frame(self.content_frame, height=500, width=650, bg='black')
         self.f1.place(x=500, y=100)
@@ -120,6 +129,7 @@ class Menu:
         btn_back = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=2, command=self.go_back).place(x=250, y=450)
 
     def create_tree(self, plc, lists):
+        """Создает таблицу Treeview для отображения данных."""
         self.tree = ttk.Treeview(plc, height=13, column=(lists), show='headings')
         n = 0
         while n is not len(lists):
@@ -129,6 +139,7 @@ class Menu:
         return self.tree
 
     def search_book(self):
+        """Выполняет поиск книги по ID, названию, автору или жанру."""
         search_query = self.sid.get()
         if search_query != "":
             self.list4 = ("BOOK ID", "TITLE", "AUTHOR", "GENRE", "COPIES", "LOCATION")
@@ -157,6 +168,7 @@ class Menu:
             messagebox.showinfo("Error", "Search field cannot be empty.")
 
     def combo(self, event):
+        """Обрабатывает выбор действия из выпадающего списка."""
         self.var_Selected = self.cm.current()
         if self.var_Selected == 0:
             self.copies(self.var_Selected)
@@ -166,6 +178,7 @@ class Menu:
             self.delete_item()
 
     def delete_item(self):
+        """Подготавливает удаление выбранной книги."""
         try:
             self.curItem = self.trees.focus()
             self.c1 = self.trees.item(self.curItem, "values")[0]
@@ -175,6 +188,7 @@ class Menu:
             messagebox.showinfo("Empty", "Please select something.")
 
     def delete2(self):
+        """Удаляет книгу из базы данных, если она не выдана студенту."""
         connection = sqlite3.connect('test.db')
         cursor = connection.execute("select * from book_issued where BOOK_ID=?", (self.c1,))
         issued_records = cursor.fetchall()
@@ -189,6 +203,7 @@ class Menu:
         connection.close()
 
     def copies(self, varr):
+        """Создает интерфейс для добавления или удаления копий книги."""
         try:
             curItem = self.trees.focus()
             self.c1 = self.trees.item(curItem, "values")[0]
@@ -204,6 +219,7 @@ class Menu:
             messagebox.showinfo("Empty", "Please select something.")
 
     def add_copies(self):
+        """Добавляет указанное количество копий книги."""
         no = self.e5.get()
         if int(no) >= 0:
             connection = sqlite3.connect('test.db')
@@ -217,6 +233,7 @@ class Menu:
             messagebox.showinfo("Error", "No. of copies cannot be negative.")
 
     def delete_copies(self):
+        """Удаляет указанное количество копий книги."""
         no1 = self.e5.get()
         if int(no1) >= 0:
             if int(no1) <= int(self.c2):
@@ -232,6 +249,7 @@ class Menu:
             messagebox.showinfo("Error", "No. of copies cannot be negative.")
 
     def view_all_books(self):
+        """Отображает список всех книг в базе данных."""
         self.f1 = tk.Frame(self.content_frame, height=500, width=650, bg='black')
         self.f1.place(x=500, y=100)
         btn_back = tk.Button(self.f1, text='Back', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=250, y=400)
@@ -248,6 +266,7 @@ class Menu:
         connection.close()
 
     def student(self):
+        """Открывает меню управления студентами и выданными книгами."""
         self.content_frame.destroy()
         self.content_frame = self.create_canvas(image2)
         btn_issue_book = tk.Button(self.content_frame, text='Issue book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.issue).place(x=12, y=100)
@@ -256,6 +275,7 @@ class Menu:
         btn_main_menu = tk.Button(self.content_frame, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=600)
 
     def issue(self):
+        """Создает окно для выдачи книги студенту."""
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
         self.f1 = tk.Frame(self.content_frame, height=550, width=500, bg='black')
@@ -268,6 +288,7 @@ class Menu:
         btn_issue = tk.Button(self.f1, text='Issue', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.issue_book).place(x=200, y=250)
 
     def issue_book(self):
+        """Обрабатывает выдачу книги студенту и обновляет базу данных."""
         bookid = self.aidd.get()
         studentid = self.astudentt.get()
         connection = sqlite3.connect('test.db')
@@ -297,6 +318,7 @@ class Menu:
             messagebox.showinfo("Error", "Fields cannot be blank.")
 
     def return_book_menu(self):
+        """Создает окно для возврата книги от студента."""
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
         self.f1 = tk.Frame(self.content_frame, height=550, width=500, bg='black')
@@ -310,6 +332,7 @@ class Menu:
         self.f1.grid_propagate(0)
 
     def process_return_book(self):
+        """Обрабатывает возврат книги и обновляет базу данных."""
         book_id = self.aidd.get()
         student_id = self.astudentt.get()
         connection = sqlite3.connect('test.db')
@@ -334,6 +357,7 @@ class Menu:
         connection.close()
 
     def activity(self):
+        """Создает окно для просмотра активности студентов и выданных книг."""
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
         self.f1 = tk.Frame(self.content_frame, height=550, width=500, bg='black')
@@ -349,6 +373,7 @@ class Menu:
         self.f1.grid_propagate(0)
 
     def search_activity(self):
+        """Выполняет поиск выданных книг по ID книги или студента."""
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
@@ -368,6 +393,7 @@ class Menu:
         connection.close()
 
     def search_all(self):
+        """Отображает все выданные книги в базе данных."""
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
@@ -384,6 +410,7 @@ class Menu:
 
 
 def create_canvas(images, w, h):
+    """Создает холст с фоновым изображением для окна входа."""
     photo = Image.open(images)
     photo1 = photo.resize((w, h), Image.ANTIALIAS)
     photo2 = ImageTk.PhotoImage(photo1)
@@ -396,6 +423,7 @@ def create_canvas(images, w, h):
 
 
 def init_database():
+    """Инициализирует базу данных для входа и создает таблицу пользователей."""
     global conn, cursor
     conn = sqlite3.connect("python1.db")
     cursor = conn.cursor()
@@ -407,6 +435,7 @@ def init_database():
 
 
 def login_process(event=None):
+    """Обрабатывает процесс входа пользователя в систему."""
     init_database()
     if username_var.get() == "" or password_var.get() == "":
         messagebox.showinfo("Error", "Please complete the required field!")
