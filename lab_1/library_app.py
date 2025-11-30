@@ -8,7 +8,7 @@ image1 = 'library.png'
 image2 = 'image2.png'
 image3 = 'finance.png'
 #pip install Pillow
-class menu:
+class Menu:
 
     def __init__(self):
         self.root = tk.Tk()
@@ -31,11 +31,11 @@ class menu:
         PRIMARY KEY (BOOK_ID,STUDENT_ID));''')
         conn.commit()
         conn.close()
-        self.a = self.canvases(image1)
+        self.a = self.create_canvas(image1)
         l1 = tk.Button(self.a, text='BOOK DATA', font='Papyrus 22 bold', fg='Yellow', bg='Black', width=19, padx=10, borderwidth=0, command=self.book).place(x=100, y=500)
         l2 = tk.Button(self.a, text='STUDENT DATA', font='Papyrus 22 bold', fg='Yellow', bg='Black', width=19, padx=10, borderwidth=0, command=self.student).place(x=800, y=500)
         self.root.mainloop()
-    def canvases(self, images):
+    def create_canvas(self, images):
         w = self.root.winfo_screenwidth()
         h = self.root.winfo_screenheight()
         #photo=PhotoImage(file=images)
@@ -52,18 +52,18 @@ class menu:
         return self.canvas
     def book(self):
         self.a.destroy()
-        self.a = self.canvases(image2)
-        l1 = tk.Button(self.a, text='Add Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.addbook).place(x=12, y=100)
+        self.a = self.create_canvas(image2)
+        l1 = tk.Button(self.a, text='Add Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.add_book).place(x=12, y=100)
         l2 = tk.Button(self.a, text='Search Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.search).place(x=12, y=200)
 
-        l4 = tk.Button(self.a, text='All Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.all).place(x=12, y=300)
-        l4 = tk.Button(self.a, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.mainmenu).place(x=12, y=500)
+        l4 = tk.Button(self.a, text='All Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.view_all_books).place(x=12, y=300)
+        l4 = tk.Button(self.a, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=500)
 
 
 
 
 
-    def addbook(self):
+    def add_book(self):
         self.aid = tk.StringVar()
         self.aauthor = tk.StringVar()
         self.aname = tk.StringVar()
@@ -85,16 +85,16 @@ class menu:
         l5 = tk.Label(self.f1, text='Location : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=300)
         e3 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aloc).place(x=150, y=300)
         self.f1.grid_propagate(0)
-        b1 = tk.Button(self.f1, text='Add', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.adddata).place(x=150, y=400)
-        b2 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.rm).place(x=350, y=400)
+        b1 = tk.Button(self.f1, text='Add', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.add_data).place(x=150, y=400)
+        b2 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.go_back).place(x=350, y=400)
 
-    def rm(self):
+    def go_back(self):
         self.f1.destroy()
-    def mainmenu(self):
+    def main_menu(self):
         self.root.destroy()
-        a = menu()
+        a = Menu()
 
-    def adddata(self):
+    def add_data(self):
         a = self.aid.get()
         b = self.aname.get()
         c = self.aauthor.get()
@@ -123,8 +123,8 @@ class menu:
         self.f1.place(x=500, y=100)
         l1 = tk.Label(self.f1, text='Book ID/Title/Author/Genre: ', font=('Papyrus 10 bold'), bd=2, fg='orange', bg='black').place(x=20, y=40)
         e1 = tk.Entry(self.f1, width=25, bd=5, bg='orange', fg='black', textvariable=self.sid).place(x=260, y=40)
-        b1 = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=9, bd=2, command=self.serch1).place(x=500, y=37)
-        b1 = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=2, command=self.rm).place(x=250, y=450)
+        b1 = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=9, bd=2, command=self.search_book).place(x=500, y=37)
+        b1 = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=2, command=self.go_back).place(x=250, y=450)
 
     def create_tree(self, plc, lists):
         self.tree = ttk.Treeview(plc, height=13, column=(lists), show='headings')
@@ -136,7 +136,7 @@ class menu:
         return self.tree
 
 
-    def serch1(self):
+    def search_book(self):
         k = self.sid.get()
         if k != "":
             self.list4 = ("BOOK ID", "TITLE", "AUTHOR", "GENRE", "COPIES", "LOCATION")
@@ -183,8 +183,8 @@ class menu:
         elif self.var_Selected == 1:
             self.copies(self.var_Selected)
         elif self.var_Selected == 2:
-            self.deleteitem()
-    def deleteitem(self):
+            self.delete_item()
+    def delete_item(self):
         try:
             self.curItem = self.trees.focus()
 
@@ -217,13 +217,13 @@ class menu:
             self.e5 = tk.Entry(self.f1, width=20, textvariable=self.scop)
             self.e5.place(x=310, y=100)
             if varr == 0:
-                b5 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.copiesadd).place(x=500, y=97)
+                b5 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.add_copies).place(x=500, y=97)
             if varr == 1:
-                b6 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.copiesdelete).place(x=500, y=97)
+                b6 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.delete_copies).place(x=500, y=97)
         except:
             messagebox.showinfo("Empty", "Please select something.")
 
-    def copiesadd(self):
+    def add_copies(self):
         no = self.e5.get()
         if int(no) >= 0:
 
@@ -233,13 +233,13 @@ class menu:
             conn.commit()
 
             messagebox.showinfo("Updated", "Copies added sucessfully.")
-            self.serch1()
+            self.search_book()
             conn.close()
 
         else:
             messagebox.showinfo("Error", "No. of copies cannot be negative.")
 
-    def copiesdelete(self):
+    def delete_copies(self):
         no1 = self.e5.get()
         if int(no1) >= 0:
             if int(no1) <= int(self.c2):
@@ -250,17 +250,17 @@ class menu:
                 conn.close()
 
                 messagebox.showinfo("Updated", "Deleted sucessfully")
-                self.serch1()
+                self.search_book()
 
             else:
                 messagebox.showinfo("Maximum", "No. of copies to delete exceed available copies.")
         else:
             messagebox.showinfo("Error", "No. of copies cannot be negative.")
 
-    def all(self):
+    def view_all_books(self):
         self.f1 = tk.Frame(self.a, height=500, width=650, bg='black')
         self.f1.place(x=500, y=100)
-        b1 = tk.Button(self.f1, text='Back', bg='orange', fg='black', width=10, bd=3, command=self.rm).place(x=250, y=400)
+        b1 = tk.Button(self.f1, text='Back', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=250, y=400)
         conn = sqlite3.connect('test.db')
         self.list3 = ("BOOK ID", "TITLE", "AUTHOR", "GENRE", "COPIES", "LOCATION")
         self.treess = self.create_tree(self.f1, self.list3)
@@ -275,11 +275,11 @@ class menu:
 
     def student(self):
         self.a.destroy()
-        self.a = self.canvases(image2)
+        self.a = self.create_canvas(image2)
         l1 = tk.Button(self.a, text='Issue book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.issue).place(x=12, y=100)
-        l2 = tk.Button(self.a, text='Return Book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.returnn).place(x=12, y=200)
+        l2 = tk.Button(self.a, text='Return Book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.return_book_menu).place(x=12, y=200)
         l3 = tk.Button(self.a, text='Student Activity', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.activity).place(x=12, y=300)
-        l4 = tk.Button(self.a, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.mainmenu).place(x=12, y=600)
+        l4 = tk.Button(self.a, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=600)
 
 
 
@@ -293,10 +293,10 @@ class menu:
         e1 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.aidd).place(x=180, y=100)
         l2 = tk.Label(self.f1, text='Student Id : ', font='papyrus 15 bold', bg='black', fg='orange').place(x=50, y=150)
         e2 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.astudentt).place(x=180, y=150)
-        b1 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.rm).place(x=50, y=250)
-        b1 = tk.Button(self.f1, text='Issue', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.issuedbook).place(x=200, y=250)
+        b1 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.go_back).place(x=50, y=250)
+        b1 = tk.Button(self.f1, text='Issue', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.issue_book).place(x=200, y=250)
 
-    def issuedbook(self):
+    def issue_book(self):
         bookid = self.aidd.get()
         studentid = self.astudentt.get()
         conn = sqlite3.connect('test.db')
@@ -325,7 +325,7 @@ class menu:
         else:
             messagebox.showinfo("Error", "Fields cannot be blank.")
 
-    def returnn(self):
+    def return_book_menu(self):
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
 
@@ -335,11 +335,11 @@ class menu:
         e1 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.aidd).place(x=180, y=100)
         l2 = tk.Label(self.f1, text='Student Id : ', font='papyrus 15 bold', fg='orange', bg='black').place(x=50, y=150)
         e2 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.astudentt).place(x=180, y=150)
-        b1 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.rm).place(x=50, y=250)
-        b1 = tk.Button(self.f1, text='Return', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.returnbook).place(x=200, y=250)
+        b1 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=50, y=250)
+        b1 = tk.Button(self.f1, text='Return', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.process_return_book).place(x=200, y=250)
         self.f1.grid_propagate(0)
 
-    def returnbook(self):
+    def process_return_book(self):
         a = self.aidd.get()
         b = self.astudentt.get()
 
@@ -380,12 +380,12 @@ class menu:
         e1 = tk.Entry(self.f1, width=20, bd=4, bg='orange', textvariable=self.aidd).place(x=280, y=35)
         #l2=tk.Label(self.f1,text='Student Id : ',font='papyrus 15 bold',fg='orange',bg='black').place(x=50,y=80)
         #e2=tk.Entry(self.f1,width=20,bd=4,bg='orange',textvariable=self.astudentt).place(x=180,y=80)
-        b1 = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.rm).place(x=340, y=450)
-        b1 = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.searchact).place(x=40, y=450)
-        b1 = tk.Button(self.f1, text='All', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.searchall).place(x=190, y=450)
+        b1 = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.go_back).place(x=340, y=450)
+        b1 = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.search_activity).place(x=40, y=450)
+        b1 = tk.Button(self.f1, text='All', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.search_all).place(x=190, y=450)
         self.f1.grid_propagate(0)
 
-    def searchact(self):
+    def search_activity(self):
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
@@ -406,7 +406,7 @@ class menu:
             messagebox.showinfo(e)
         conn.close()
 
-    def searchall(self):
+    def search_all(self):
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
@@ -424,7 +424,7 @@ class menu:
         conn.close()
 
 #===================START=======================
-def canvases(images, w, h):
+def create_canvas(images, w, h):
     photo = Image.open(images)
     photo1 = photo.resize((w, h), Image.ANTIALIAS)
     photo2 = ImageTk.PhotoImage(photo1)
@@ -449,12 +449,12 @@ y = (screen_height/2) - (height/2)"""
 #root.resizable(0, 0)
 w = root.winfo_screenwidth()
 h = root.winfo_screenheight()
-canvas = canvases(image3, w, h)
+canvas = create_canvas(image3, w, h)
 #photo=PhotoImage(file=images)
 
 
 #==============================METHODS========================================
-def Database():
+def init_database():
     global conn, cursor
     conn = sqlite3.connect("python1.db")
     cursor = conn.cursor()
@@ -464,37 +464,37 @@ def Database():
         cursor.execute("INSERT INTO `login` (username, password) VALUES('Prakarsha', 'root')")
         conn.commit()
 
-def Login(event=None):
-    Database()
+def login_process(event=None):
+    init_database()
 
 
-    if USERNAME.get() == "" or PASSWORD.get() == "":
+    if username_var.get() == "" or password_var.get() == "":
         messagebox.showinfo("Error", "Please complete the required field!")
         lbl_text.config(text="Please complete the required field!", fg="red")
     else:
-        cursor.execute("SELECT * FROM `login` WHERE `username` = ? AND `password` = ?", (USERNAME.get(), PASSWORD.get()))
+        cursor.execute("SELECT * FROM `login` WHERE `username` = ? AND `password` = ?", (username_var.get(), password_var.get()))
         if cursor.fetchone() is not None:
             #HomeWindow()
             #Top.destroy()
             root.destroy()
 
             #print("hello logged in ")
-            a = menu()
-            #USERNAME.set("")
-            #PASSWORD.set("")
+            a = Menu()
+            #username_var.set("")
+            #password_var.set("")
             #lbl_text.config(text="")
         else:
             messagebox.showinfo("Error", "Invalid username or password.")
             #lbl_text.config(text="Invalid username or password", fg="red")
-            USERNAME.set("")
-            PASSWORD.set("")
+            username_var.set("")
+            password_var.set("")
     cursor.close()
     conn.close()
 
 
 #==============================VARIABLES======================================
-USERNAME = tk.StringVar()
-PASSWORD = tk.StringVar()
+username_var = tk.StringVar()
+password_var = tk.StringVar()
 
 #==============================FRAMES=========================================
 '''Top = tk.Frame(root, bd=2,  relief=tk.RIDGE)
@@ -515,13 +515,13 @@ lbl_text.grid_propagate(0)
 
 
 #==============================ENTRY WIDGETS==================================
-username = tk.Entry(canvas, textvariable=USERNAME, font=(14), bg='black', fg='orange', bd=6)
+username = tk.Entry(canvas, textvariable=username_var, font=(14), bg='black', fg='orange', bd=6)
 username.place(x=650, y=230,)
-password = tk.Entry(canvas, textvariable=PASSWORD, show="*", font=(14), bg='black', fg='orange', bd=6)
+password = tk.Entry(canvas, textvariable=password_var, show="*", font=(14), bg='black', fg='orange', bd=6)
 password.place(x=650, y=330)
 
 #==============================BUTTON WIDGETS=================================
-btn_login = tk.Button(canvas, text="LOGIN", font=('Papyrus 15 bold'), width=25, command=Login, bg='black', fg='orange')
+btn_login = tk.Button(canvas, text="LOGIN", font=('Papyrus 15 bold'), width=25, command=login_process, bg='black', fg='orange')
 btn_login.place(x=500, y=400)
-btn_login.bind('<Return>', Login)
+btn_login.bind('<Return>', login_process)
 root.mainloop()
