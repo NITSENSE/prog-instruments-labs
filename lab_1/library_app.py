@@ -15,26 +15,26 @@ class Menu:
         self.root = tk.Tk()
         self.root.title('Menu')
         self.root.state('zoomed')
-        conn = sqlite3.connect('test.db')
-        conn.execute('''create table if not exists book_info
+        connection = sqlite3.connect('test.db')
+        connection.execute('''create table if not exists book_info
         (ID VARCHAR PRIMARY KEY NOT NULL,
         TITLE VARTEXT NOT NULL,
         AUTHOR VARTEXT NOT NULL,
         GENRE VARTEXT NOT NULL,
         COPIES VARINT NOT NULL,
         LOCATION VARCHAR NOT NULL);''')
-        conn.commit()
-        conn.execute('''create table if not exists book_issued
+        connection.commit()
+        connection.execute('''create table if not exists book_issued
         (BOOK_ID VARCHAR NOT NULL,
         STUDENT_ID VARCHAR NOT NULL,
         ISSUE_DATE DATE NOT NULL,
         RETURN_DATE DATE NOT NULL,
         PRIMARY KEY (BOOK_ID,STUDENT_ID));''')
-        conn.commit()
-        conn.close()
-        self.a = self.create_canvas(image1)
-        l1 = tk.Button(self.a, text='BOOK DATA', font='Papyrus 22 bold', fg='Yellow', bg='Black', width=19, padx=10, borderwidth=0, command=self.book).place(x=100, y=500)
-        l2 = tk.Button(self.a, text='STUDENT DATA', font='Papyrus 22 bold', fg='Yellow', bg='Black', width=19, padx=10, borderwidth=0, command=self.student).place(x=800, y=500)
+        connection.commit()
+        connection.close()
+        self.content_frame = self.create_canvas(image1)
+        btn_book_data = tk.Button(self.content_frame, text='BOOK DATA', font='Papyrus 22 bold', fg='Yellow', bg='Black', width=19, padx=10, borderwidth=0, command=self.book).place(x=100, y=500)
+        btn_student_data = tk.Button(self.content_frame, text='STUDENT DATA', font='Papyrus 22 bold', fg='Yellow', bg='Black', width=19, padx=10, borderwidth=0, command=self.student).place(x=800, y=500)
         self.root.mainloop()
         
     def create_canvas(self, images):
@@ -51,13 +51,12 @@ class Menu:
         return self.canvas
     
     def book(self):
-        self.a.destroy()
-        self.a = self.create_canvas(image2)
-        l1 = tk.Button(self.a, text='Add Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.add_book).place(x=12, y=100)
-        l2 = tk.Button(self.a, text='Search Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.search).place(x=12, y=200)
-
-        l4 = tk.Button(self.a, text='All Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.view_all_books).place(x=12, y=300)
-        l4 = tk.Button(self.a, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=500)
+        self.content_frame.destroy()
+        self.content_frame = self.create_canvas(image2)
+        btn_add_books = tk.Button(self.content_frame, text='Add Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.add_book).place(x=12, y=100)
+        btn_search_books = tk.Button(self.content_frame, text='Search Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.search).place(x=12, y=200)
+        btn_all_books = tk.Button(self.content_frame, text='All Books', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.view_all_books).place(x=12, y=300)
+        btn_main_menu = tk.Button(self.content_frame, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=500)
 
     def add_book(self):
         self.aid = tk.StringVar()
@@ -66,23 +65,23 @@ class Menu:
         self.acopies = tk.IntVar()
         self.agenre = tk.StringVar()
         self.aloc = tk.StringVar()
-        self.f1 = tk.Frame(self.a, height=500, width=650, bg='black')
+        self.f1 = tk.Frame(self.content_frame, height=500, width=650, bg='black')
         self.f1.place(x=500, y=100)
-        l1 = tk.Label(self.f1, text='Book ID : ', font='Papyrus 12 bold', fg='Orange', bg='Black', pady=1).place(x=50, y=50)
-        e1 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aid).place(x=150, y=50)
-        l2 = tk.Label(self.f1, text='Title : ', font='Papyrus 12 bold', fg='Orange', bg='Black', pady=1).place(x=50, y=100)
-        e2 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aname).place(x=150, y=100)
-        l3 = tk.Label(self.f1, text='Author : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=150)
-        e3 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aauthor).place(x=150, y=150)
-        l4 = tk.Label(self.f1, text='Genre : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=200)
-        e2 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.agenre).place(x=150, y=200)
-        l4 = tk.Label(self.f1, text='Copies : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=250)
-        e2 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.acopies).place(x=150, y=250)
-        l5 = tk.Label(self.f1, text='Location : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=300)
-        e3 = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aloc).place(x=150, y=300)
+        label_book_id = tk.Label(self.f1, text='Book ID : ', font='Papyrus 12 bold', fg='Orange', bg='Black', pady=1).place(x=50, y=50)
+        entry_book_id = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aid).place(x=150, y=50)
+        label_title = tk.Label(self.f1, text='Title : ', font='Papyrus 12 bold', fg='Orange', bg='Black', pady=1).place(x=50, y=100)
+        entry_title = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aname).place(x=150, y=100)
+        label_author = tk.Label(self.f1, text='Author : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=150)
+        entry_author = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aauthor).place(x=150, y=150)
+        label_genre = tk.Label(self.f1, text='Genre : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=200)
+        entry_genre = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.agenre).place(x=150, y=200)
+        label_copies = tk.Label(self.f1, text='Copies : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=250)
+        entry_copies = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.acopies).place(x=150, y=250)
+        label_location = tk.Label(self.f1, text='Location : ', font='Papyrus 12 bold', fg='orange', bg='Black', pady=1).place(x=50, y=300)
+        entry_location = tk.Entry(self.f1, width=45, bg='orange', fg='black', textvariable=self.aloc).place(x=150, y=300)
         self.f1.grid_propagate(0)
-        b1 = tk.Button(self.f1, text='Add', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.add_data).place(x=150, y=400)
-        b2 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.go_back).place(x=350, y=400)
+        btn_add = tk.Button(self.f1, text='Add', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.add_data).place(x=150, y=400)
+        btn_back = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=15, bd=3, command=self.go_back).place(x=350, y=400)
 
     def go_back(self):
         self.f1.destroy()
@@ -92,33 +91,33 @@ class Menu:
         a = Menu()
 
     def add_data(self):
-        a = self.aid.get()
-        b = self.aname.get()
-        c = self.aauthor.get()
-        d = self.agenre.get()
-        e = self.acopies.get()
-        f = self.aloc.get()
-        conn = sqlite3.connect('test.db')
+        book_id = self.aid.get()
+        book_title = self.aname.get()
+        author = self.aauthor.get()
+        genre = self.agenre.get()
+        copies = self.acopies.get()
+        location = self.aloc.get()
+        connection = sqlite3.connect('test.db')
         try:
-            if (a and b and c and d and f) == "":
+            if (book_id and book_title and author and genre and location) == "":
                 messagebox.showinfo("Error", "Fields cannot be empty.")
             else:
-                conn.execute("insert into book_info \
-                values (?,?,?,?,?,?)", (a.capitalize(), b.capitalize(), c.capitalize(), d.capitalize(), e, f.capitalize(),))
-                conn.commit()
+                connection.execute("insert into book_info \
+                values (?,?,?,?,?,?)", (book_id.capitalize(), book_title.capitalize(), author.capitalize(), genre.capitalize(), copies, location.capitalize(),))
+                connection.commit()
                 messagebox.showinfo("Success", "Book added successfully")
         except sqlite3.IntegrityError:
             messagebox.showinfo("Error", "Book is already present.")
-        conn.close()
+        connection.close()
 
     def search(self):
         self.sid = tk.StringVar()
-        self.f1 = tk.Frame(self.a, height=500, width=650, bg='black')
+        self.f1 = tk.Frame(self.content_frame, height=500, width=650, bg='black')
         self.f1.place(x=500, y=100)
-        l1 = tk.Label(self.f1, text='Book ID/Title/Author/Genre: ', font=('Papyrus 10 bold'), bd=2, fg='orange', bg='black').place(x=20, y=40)
-        e1 = tk.Entry(self.f1, width=25, bd=5, bg='orange', fg='black', textvariable=self.sid).place(x=260, y=40)
-        b1 = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=9, bd=2, command=self.search_book).place(x=500, y=37)
-        b1 = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=2, command=self.go_back).place(x=250, y=450)
+        label_search = tk.Label(self.f1, text='Book ID/Title/Author/Genre: ', font=('Papyrus 10 bold'), bd=2, fg='orange', bg='black').place(x=20, y=40)
+        entry_search = tk.Entry(self.f1, width=25, bd=5, bg='orange', fg='black', textvariable=self.sid).place(x=260, y=40)
+        btn_search = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=9, bd=2, command=self.search_book).place(x=500, y=37)
+        btn_back = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=2, command=self.go_back).place(x=250, y=450)
 
     def create_tree(self, plc, lists):
         self.tree = ttk.Treeview(plc, height=13, column=(lists), show='headings')
@@ -130,19 +129,19 @@ class Menu:
         return self.tree
 
     def search_book(self):
-        k = self.sid.get()
-        if k != "":
+        search_query = self.sid.get()
+        if search_query != "":
             self.list4 = ("BOOK ID", "TITLE", "AUTHOR", "GENRE", "COPIES", "LOCATION")
             self.trees = self.create_tree(self.f1, self.list4)
             self.trees.place(x=25, y=150)
-            conn = sqlite3.connect('test.db')
-            c = conn.execute("select * from book_info where ID=? OR TITLE=? OR AUTHOR=? OR GENRE=?", (k.capitalize(), k.capitalize(), k.capitalize(), k.capitalize(),))
-            a = c.fetchall()
-            if len(a) != 0:
-                for row in a:
+            connection = sqlite3.connect('test.db')
+            cursor = connection.execute("select * from book_info where ID=? OR TITLE=? OR AUTHOR=? OR GENRE=?", (search_query.capitalize(), search_query.capitalize(), search_query.capitalize(), search_query.capitalize(),))
+            results = cursor.fetchall()
+            if len(results) != 0:
+                for row in results:
                     self.trees.insert("", tk.END, values=row)
-                conn.commit()
-                conn.close()
+                connection.commit()
+                connection.close()
                 self.trees.bind('<<TreeviewSelect>>')
                 self.variable = tk.StringVar(self.f1)
                 self.variable.set("Select Action:")
@@ -170,24 +169,24 @@ class Menu:
         try:
             self.curItem = self.trees.focus()
             self.c1 = self.trees.item(self.curItem, "values")[0]
-            b1 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', width=9, bd=3, command=self.delete2).place(x=500, y=97)
+            btn_update = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', width=9, bd=3, command=self.delete2).place(x=500, y=97)
 
         except:
             messagebox.showinfo("Empty", "Please select something.")
 
     def delete2(self):
-        conn = sqlite3.connect('test.db')
-        cd = conn.execute("select * from book_issued where BOOK_ID=?", (self.c1,))
-        ab = cd.fetchall()
-        if ab != 0:
-            conn.execute("DELETE FROM book_info where ID=?", (self.c1,))
-            conn.commit()
+        connection = sqlite3.connect('test.db')
+        cursor = connection.execute("select * from book_issued where BOOK_ID=?", (self.c1,))
+        issued_records = cursor.fetchall()
+        if issued_records != 0:
+            connection.execute("DELETE FROM book_info where ID=?", (self.c1,))
+            connection.commit()
             messagebox.showinfo("Successful", "Book Deleted sucessfully.")
             self.trees.delete(self.curItem)
         else:
             messagebox.showinfo("Error", "Book is Issued.\nBook cannot be deleted.")
-        conn.commit()
-        conn.close()
+        connection.commit()
+        connection.close()
 
     def copies(self, varr):
         try:
@@ -198,21 +197,21 @@ class Menu:
             self.e5 = tk.Entry(self.f1, width=20, textvariable=self.scop)
             self.e5.place(x=310, y=100)
             if varr == 0:
-                b5 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.add_copies).place(x=500, y=97)
+                btn_update = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.add_copies).place(x=500, y=97)
             if varr == 1:
-                b6 = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.delete_copies).place(x=500, y=97)
+                btn_update = tk.Button(self.f1, text='Update', font='Papyrus 10 bold', bg='orange', fg='black', width=9, bd=3, command=self.delete_copies).place(x=500, y=97)
         except:
             messagebox.showinfo("Empty", "Please select something.")
 
     def add_copies(self):
         no = self.e5.get()
         if int(no) >= 0:
-            conn = sqlite3.connect('test.db')
-            conn.execute("update book_info set COPIES=COPIES+? where ID=?", (no, self.c1,))
-            conn.commit()
+            connection = sqlite3.connect('test.db')
+            connection.execute("update book_info set COPIES=COPIES+? where ID=?", (no, self.c1,))
+            connection.commit()
             messagebox.showinfo("Updated", "Copies added sucessfully.")
             self.search_book()
-            conn.close()
+            connection.close()
 
         else:
             messagebox.showinfo("Error", "No. of copies cannot be negative.")
@@ -221,10 +220,10 @@ class Menu:
         no1 = self.e5.get()
         if int(no1) >= 0:
             if int(no1) <= int(self.c2):
-                conn = sqlite3.connect('test.db')
-                conn.execute("update book_info set COPIES=COPIES-? where ID=?", (no1, self.c1,))
-                conn.commit()
-                conn.close()
+                connection = sqlite3.connect('test.db')
+                connection.execute("update book_info set COPIES=COPIES-? where ID=?", (no1, self.c1,))
+                connection.commit()
+                connection.close()
                 messagebox.showinfo("Updated", "Deleted sucessfully")
                 self.search_book()
             else:
@@ -233,46 +232,46 @@ class Menu:
             messagebox.showinfo("Error", "No. of copies cannot be negative.")
 
     def view_all_books(self):
-        self.f1 = tk.Frame(self.a, height=500, width=650, bg='black')
+        self.f1 = tk.Frame(self.content_frame, height=500, width=650, bg='black')
         self.f1.place(x=500, y=100)
-        b1 = tk.Button(self.f1, text='Back', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=250, y=400)
-        conn = sqlite3.connect('test.db')
+        btn_back = tk.Button(self.f1, text='Back', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=250, y=400)
+        connection = sqlite3.connect('test.db')
         self.list3 = ("BOOK ID", "TITLE", "AUTHOR", "GENRE", "COPIES", "LOCATION")
         self.treess = self.create_tree(self.f1, self.list3)
         self.treess.place(x=25, y=50)
-        c = conn.execute("select * from book_info")
-        g = c.fetchall()
-        if len(g) != 0:
-            for row in g:
+        cursor = connection.execute("select * from book_info")
+        results = cursor.fetchall()
+        if len(results) != 0:
+            for row in results:
                 self.treess.insert('', tk.END, values=row)
-        conn.commit()
-        conn.close()
+        connection.commit()
+        connection.close()
 
     def student(self):
-        self.a.destroy()
-        self.a = self.create_canvas(image2)
-        l1 = tk.Button(self.a, text='Issue book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.issue).place(x=12, y=100)
-        l2 = tk.Button(self.a, text='Return Book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.return_book_menu).place(x=12, y=200)
-        l3 = tk.Button(self.a, text='Student Activity', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.activity).place(x=12, y=300)
-        l4 = tk.Button(self.a, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=600)
+        self.content_frame.destroy()
+        self.content_frame = self.create_canvas(image2)
+        btn_issue_book = tk.Button(self.content_frame, text='Issue book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.issue).place(x=12, y=100)
+        btn_return_book = tk.Button(self.content_frame, text='Return Book', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.return_book_menu).place(x=12, y=200)
+        btn_student_activity = tk.Button(self.content_frame, text='Student Activity', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.activity).place(x=12, y=300)
+        btn_main_menu = tk.Button(self.content_frame, text='<< Main Menu', font='Papyrus 22 bold', fg='Orange', bg='Black', width=15, padx=10, command=self.main_menu).place(x=12, y=600)
 
     def issue(self):
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
-        self.f1 = tk.Frame(self.a, height=550, width=500, bg='black')
+        self.f1 = tk.Frame(self.content_frame, height=550, width=500, bg='black')
         self.f1.place(x=500, y=100)
-        l1 = tk.Label(self.f1, text='Book ID : ', font='papyrus 15 bold', bg='black', fg='orange').place(x=50, y=100)
-        e1 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.aidd).place(x=180, y=100)
-        l2 = tk.Label(self.f1, text='Student Id : ', font='papyrus 15 bold', bg='black', fg='orange').place(x=50, y=150)
-        e2 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.astudentt).place(x=180, y=150)
-        b1 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.go_back).place(x=50, y=250)
-        b1 = tk.Button(self.f1, text='Issue', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.issue_book).place(x=200, y=250)
+        label_book_id = tk.Label(self.f1, text='Book ID : ', font='papyrus 15 bold', bg='black', fg='orange').place(x=50, y=100)
+        entry_book_id = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.aidd).place(x=180, y=100)
+        label_student_id = tk.Label(self.f1, text='Student Id : ', font='papyrus 15 bold', bg='black', fg='orange').place(x=50, y=150)
+        entry_student_id = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.astudentt).place(x=180, y=150)
+        btn_back = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.go_back).place(x=50, y=250)
+        btn_issue = tk.Button(self.f1, text='Issue', font='Papyrus 10 bold', fg='black', bg='orange', width=10, bd=3, command=self.issue_book).place(x=200, y=250)
 
     def issue_book(self):
         bookid = self.aidd.get()
         studentid = self.astudentt.get()
-        conn = sqlite3.connect('test.db')
-        cursor = conn.cursor()
+        connection = sqlite3.connect('test.db')
+        cursor = connection.cursor()
         cursor.execute("select ID,COPIES from book_info where ID=?", (bookid.capitalize(),))
         an = cursor.fetchall()
         if (bookid and studentid != ""):
@@ -280,12 +279,12 @@ class Menu:
                 for i in an:
                     if i[1] > 0:
                         try:
-                            conn.execute("insert into book_issued \
+                            connection.execute("insert into book_issued \
                             values (?,?,date('now'),date('now','+7 day'))", (bookid.capitalize(), studentid.capitalize(),))
-                            conn.commit()
-                            conn.execute("update book_info set COPIES=COPIES-1 where ID=?", (bookid.capitalize(),))
-                            conn.commit()
-                            conn.close()
+                            connection.commit()
+                            connection.execute("update book_info set COPIES=COPIES-1 where ID=?", (bookid.capitalize(),))
+                            connection.commit()
+                            connection.close()
                             messagebox.showinfo("Updated", "Book Issued sucessfully.")
                         except:
                             messagebox.showinfo("Error", "Book is already issued by student.")
@@ -300,88 +299,88 @@ class Menu:
     def return_book_menu(self):
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
-        self.f1 = tk.Frame(self.a, height=550, width=500, bg='black')
+        self.f1 = tk.Frame(self.content_frame, height=550, width=500, bg='black')
         self.f1.place(x=500, y=100)
-        l1 = tk.Label(self.f1, text='Book ID : ', font='papyrus 15 bold', fg='orange', bg='black').place(x=50, y=100)
-        e1 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.aidd).place(x=180, y=100)
-        l2 = tk.Label(self.f1, text='Student Id : ', font='papyrus 15 bold', fg='orange', bg='black').place(x=50, y=150)
-        e2 = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.astudentt).place(x=180, y=150)
-        b1 = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=50, y=250)
-        b1 = tk.Button(self.f1, text='Return', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.process_return_book).place(x=200, y=250)
+        label_book_id = tk.Label(self.f1, text='Book ID : ', font='papyrus 15 bold', fg='orange', bg='black').place(x=50, y=100)
+        entry_book_id = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.aidd).place(x=180, y=100)
+        label_student_id = tk.Label(self.f1, text='Student Id : ', font='papyrus 15 bold', fg='orange', bg='black').place(x=50, y=150)
+        entry_student_id = tk.Entry(self.f1, width=25, bd=4, bg='orange', textvariable=self.astudentt).place(x=180, y=150)
+        btn_back = tk.Button(self.f1, text='Back', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.go_back).place(x=50, y=250)
+        btn_return = tk.Button(self.f1, text='Return', font='Papyrus 10 bold', bg='orange', fg='black', width=10, bd=3, command=self.process_return_book).place(x=200, y=250)
         self.f1.grid_propagate(0)
 
     def process_return_book(self):
-        a = self.aidd.get()
-        b = self.astudentt.get()
-        conn = sqlite3.connect('test.db')
-        fg = conn.execute("select ID from book_info where ID=?", (a.capitalize(),))
-        fh = fg.fetchall()
-        conn.commit()
-        if fh != None:
-            c = conn.execute("select * from book_issued where BOOK_ID=? and STUDENT_ID=?", (a.capitalize(), b.capitalize(),))
-            d = c.fetchall()
-            conn.commit()
-            if len(d) != 0:
-                c.execute("DELETE FROM book_issued where BOOK_ID=? and STUDENT_ID=?", (a.capitalize(), b.capitalize(),))
-                conn.commit()
-                conn.execute("update book_info set COPIES=COPIES+1 where ID=?", (a.capitalize(),))
-                conn.commit()
+        book_id = self.aidd.get()
+        student_id = self.astudentt.get()
+        connection = sqlite3.connect('test.db')
+        cursor = connection.execute("select ID from book_info where ID=?", (book_id.capitalize(),))
+        book_check = cursor.fetchall()
+        connection.commit()
+        if book_check != None:
+            cursor = connection.execute("select * from book_issued where BOOK_ID=? and STUDENT_ID=?", (book_id.capitalize(), student_id.capitalize(),))
+            issued_records = cursor.fetchall()
+            connection.commit()
+            if len(issued_records) != 0:
+                cursor.execute("DELETE FROM book_issued where BOOK_ID=? and STUDENT_ID=?", (book_id.capitalize(), student_id.capitalize(),))
+                connection.commit()
+                connection.execute("update book_info set COPIES=COPIES+1 where ID=?", (book_id.capitalize(),))
+                connection.commit()
                 messagebox.showinfo("Success", "Book Returned sucessfully.")
             else:
                 messagebox.showinfo("Error", "Data not found.")
         else:
             messagebox.showinfo("Error", "No such book.\nPlease add the book in database.")
-        conn.commit()
-        conn.close()
+        connection.commit()
+        connection.close()
 
     def activity(self):
         self.aidd = tk.StringVar()
         self.astudentt = tk.StringVar()
-        self.f1 = tk.Frame(self.a, height=550, width=500, bg='black')
+        self.f1 = tk.Frame(self.content_frame, height=550, width=500, bg='black')
         self.f1.place(x=500, y=80)
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
-        l1 = tk.Label(self.f1, text='Book/Student ID : ', font='Papyrus 15 bold', fg='Orange', bg='black').place(x=50, y=30)
-        e1 = tk.Entry(self.f1, width=20, bd=4, bg='orange', textvariable=self.aidd).place(x=280, y=35)
-        b1 = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.go_back).place(x=340, y=450)
-        b1 = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.search_activity).place(x=40, y=450)
-        b1 = tk.Button(self.f1, text='All', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.search_all).place(x=190, y=450)
+        label_search = tk.Label(self.f1, text='Book/Student ID : ', font='Papyrus 15 bold', fg='Orange', bg='black').place(x=50, y=30)
+        entry_search = tk.Entry(self.f1, width=20, bd=4, bg='orange', textvariable=self.aidd).place(x=280, y=35)
+        btn_back = tk.Button(self.f1, text='Back', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.go_back).place(x=340, y=450)
+        btn_search = tk.Button(self.f1, text='Search', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.search_activity).place(x=40, y=450)
+        btn_all = tk.Button(self.f1, text='All', bg='orange', font='Papyrus 10 bold', width=10, bd=3, command=self.search_all).place(x=190, y=450)
         self.f1.grid_propagate(0)
 
     def search_activity(self):
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
-        conn = sqlite3.connect('test.db')
+        connection = sqlite3.connect('test.db')
         bid = self.aidd.get()
         try:
-            c = conn.execute("select * from book_issued where BOOK_ID=? or STUDENT_ID=?", (bid.capitalize(), bid.capitalize(),))
-            d = c.fetchall()
-            if len(d) != 0:
-                for row in d:
+            cursor = connection.execute("select * from book_issued where BOOK_ID=? or STUDENT_ID=?", (bid.capitalize(), bid.capitalize(),))
+            results = cursor.fetchall()
+            if len(results) != 0:
+                for row in results:
                     self.trees.insert("", tk.END, values=row)
             else:
                 messagebox.showinfo("Error", "Data not found.")
-            conn.commit()
+            connection.commit()
         except Exception as e:
             messagebox.showinfo(e)
-        conn.close()
+        connection.close()
 
     def search_all(self):
         self.list2 = ("BOOK ID", "STUDENT ID", "ISSUE DATE", "RETURN DATE")
         self.trees = self.create_tree(self.f1, self.list2)
         self.trees.place(x=50, y=150)
-        conn = sqlite3.connect('test.db')
+        connection = sqlite3.connect('test.db')
         try:
-            c = conn.execute("select * from book_issued")
-            d = c.fetchall()
-            for row in d:
+            cursor = connection.execute("select * from book_issued")
+            results = cursor.fetchall()
+            for row in results:
                 self.trees.insert("", tk.END, values=row)
-            conn.commit()
+            connection.commit()
         except Exception as e:
             messagebox.showinfo(e)
-        conn.close()
+        connection.close()
 
 
 def create_canvas(images, w, h):
