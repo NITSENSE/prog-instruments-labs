@@ -17,21 +17,27 @@ FILENAME_CSV = 'dataset.csv'
 FILENAME_JSON = 'result.json'
 ENCODING = 'utf-16'
 
+
 PATTERNS = {
+    'email': re.compile(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$'),
     'telephone': re.compile(r'^\+7-\(\d{3}\)-\d{3}-\d{2}-\d{2}$'),
     'http_status_message': re.compile(r'^\d{3}\s[a-zA-Z0-9_ ]+$'),
+    'height': re.compile(r'^[0-2]\.\d{2}$'),
     'snils': re.compile(r'^\d{11}$'),
+    'inn': re.compile(r'^\d{12}$'),
+    'passport': re.compile(r'^\d{2}\s\d{2}\s\d{6}$'),
     'identifier': re.compile(r'^\d{2}-\d{2}/\d{2}$'),
-    'ip_v4': re.compile(
-        r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}'
-        r'(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)$'
-    ),
-    'longitude': re.compile(
-        r'^-?(?:180(?:\.0+)?|(?:1[0-7]\d|[1-9]?\d)(?:\.\d+)?)$'
-    ),
-    'blood_type': re.compile(r'^(A|B|AB|O)[\u2212\-\+]$'),
-    'isbn': re.compile(r'^(?:\d+-\d+-\d+-\d+(?:-\d+)?)$'),
-    'locale_code': re.compile(r'^[a-z]{2}(?:-[a-z]{2,})?(?:_[a-z0-9]+)?$'),
+    'ip_v4': re.compile(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)$'),
+    'occupation': re.compile(r'^[a-zA-Zа-яА-ЯёЁ\s-]+$'),
+    'longitude': re.compile(r'^-?(?:180(?:\.0+)?|(?:1[0-7]\d|[1-9]?\d)(?:\.\d+)?)$'),
+    'latitude': re.compile(r'^-?(?:90(?:\.0+)?|[1-8]?\d(?:\.\d+)?)$'),
+    'hex_color': re.compile(r'^#[0-9a-fA-F]{6}$'),
+    'blood_type': re.compile(r'^(?:A|B|AB|O)(?:\+|[\u2212])$'),
+    'isbn': re.compile(r'^(?:(?:\d+-\d+-\d+-\d+-\d)|(?:\d+-\d+-\d+-[\dX]))$'),
+    'issn': re.compile(r'^\d{4}-\d{3}[\dX]$'),
+    'locale_code': re.compile(r'^[a-z]{2}(?:-[a-z]{2,})?$'),
+    'uuid': re.compile(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'),
+    'time': re.compile(r'^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d\.\d{6}$'),
     'date': re.compile(r'^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$')
 }
 
