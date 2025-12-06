@@ -20,7 +20,7 @@ class TestTudoMethods(unittest.TestCase):
 
     def test_add(self):
         """Тест добавления задачи."""
-        controller.add(self.store, ["Do Homework"])
+        controller.add_task(self.store, "Do Homework")
         # self.assertEqual(main.list_tasks()[-1], "Do Homework")
         self.assertTrue(len(controller.list_tasks(self.store)) == 1)
 

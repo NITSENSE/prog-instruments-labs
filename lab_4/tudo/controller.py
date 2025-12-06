@@ -24,24 +24,26 @@ def remove_tasks(store, numbers):
     return
 
 
-def add(store, args):
-    """Добавляет задачи в базу данных.
+def add_task(store, description):
+    """Добавляет задачу в базу данных.
     
     Args:
         store: Экземпляр TasksStore для работы с базой данных.
-        args: Список аргументов. Если первый аргумент "--prio", то следующие аргументы
-              должны быть кратны 3 (описание, важность, срочность для каждой задачи).
-              Иначе все аргументы считаются описаниями задач.
+        description: Описание задачи.
     """
-    if args[0] == "--prio" and len(args[1:]) % 3 == 0:
-        tasks = args[1:]
-        for i in range(0, len(tasks) // 3):
-            store.add_task_p([tasks[i * 3], tasks[i * 3 + 1], tasks[i * 3 + 2]])
-    else:
-        # TODO Behaviour for no Tasks to add
-        for description in args:
-            store.add_task(description)
-    return
+    store.add_task(description)
+
+
+def add_task_with_priority(store, description, important, urgent):
+    """Добавляет задачу с приоритетами в базу данных.
+    
+    Args:
+        store: Экземпляр TasksStore для работы с базой данных.
+        description: Описание задачи.
+        important: Флаг важности (0 или 1).
+        urgent: Флаг срочности (0 или 1).
+    """
+    store.add_task_p([description, important, urgent])
 
 
 def list_tasks(store, show_completed=False, important = None, urgent = None):
@@ -56,7 +58,7 @@ def list_tasks(store, show_completed=False, important = None, urgent = None):
     Returns:
         Список объектов Task.
     """
-    if important and urgent:
+    if important is not None and urgent is not None:
         tasks = store.list_tasks_p(important, urgent)
     else:
         tasks = store.list_tasks()
@@ -84,12 +86,11 @@ def list_tasks(store, show_completed=False, important = None, urgent = None):
 
 
 # TODO: Be able to set time range for grouping
-def group_tasks_archived(store, *args):
+def group_tasks_archived(store):
     """Группирует завершенные задачи по датам и выводит статистику.
     
     Args:
         store: Экземпляр TasksStore для работы с базой данных.
-        *args: Дополнительные аргументы (не используются).
         
     Returns:
         Список списков [дата, количество_завершенных_задач].
@@ -100,12 +101,11 @@ def group_tasks_archived(store, *args):
     return dates_and_nums
 
 
-def eisenhower_matrix(store, *args):
+def eisenhower_matrix(store):
     """Выводит матрицу Эйзенхауэра для задач.
     
     Args:
         store: Экземпляр TasksStore для работы с базой данных.
-        *args: Дополнительные аргументы (не используются).
     """
     col0 = col1 = col2 = col3 = []
 
