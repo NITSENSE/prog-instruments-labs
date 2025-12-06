@@ -1,1 +1,0 @@
-# TODO: Add tests which directly test the command line input/outputs
