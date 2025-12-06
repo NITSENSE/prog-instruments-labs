@@ -3,6 +3,7 @@ import sys
 
 import tudo.controller as controller
 import tudo.store as store
+import tudo.view as view
 
 
 def create_parser():
@@ -61,7 +62,7 @@ def handle_add(store, args):
     """
     if args.prio:
         if len(args.descriptions) % 3 != 0:
-            print("Ошибка: при использовании --prio количество аргументов должно быть кратно 3")
+            view.print_error("Ошибка: при использовании --prio количество аргументов должно быть кратно 3")
             return
         tasks = args.descriptions
         for i in range(0, len(tasks) // 3):
@@ -89,8 +90,9 @@ def handle_list(store, args):
         important = args.prio[0]
         urgent = args.prio[1]
     
-    controller.list_tasks(store, show_completed=show_completed, 
-                         important=important, urgent=urgent)
+    tasks = controller.list_tasks(store, show_completed=show_completed, 
+                                  important=important, urgent=urgent)
+    view.print_tasks(tasks, show_completed=show_completed)
 
 
 def main(argv=sys.argv):
@@ -116,8 +118,8 @@ def main(argv=sys.argv):
         'list': lambda: handle_list(task_store, args),
         'rm': lambda: controller.remove_tasks(task_store, args.numbers),
         'done': lambda: controller.finish_tasks(task_store, args.numbers),
-        'stats': lambda: controller.group_tasks_archived(task_store),
-        'eisenhower': lambda: controller.eisenhower_matrix(task_store)
+        'stats': lambda: view.print_stats(controller.group_tasks_archived(task_store)),
+        'eisenhower': lambda: view.print_matrix(controller.eisenhower_matrix(task_store))
     }
     
     command_handlers[args.command]()
