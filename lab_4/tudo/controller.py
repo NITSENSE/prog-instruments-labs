@@ -81,24 +81,31 @@ def group_tasks_archived(store):
 def eisenhower_matrix(store):
     """Возвращает данные для матрицы Эйзенхауэра.
     
+    Матрица Эйзенхауэра представляет собой 2x2 сетку:
+    - Важно/Срочно (верхний левый квадрант)
+    - Важно/Не срочно (верхний правый квадрант)
+    - Не важно/Срочно (нижний левый квадрант)
+    - Не важно/Не срочно (нижний правый квадрант)
+    
     Args:
         store: Экземпляр TasksStore для работы с базой данных.
         
     Returns:
         Словарь с данными матрицы, содержащий ключи:
-            - imp_urg: список строк задач (важные и срочные)
-            - imp_not_urg: список строк задач (важные, но не срочные)
-            - not_imp_urg: список строк задач (не важные, но срочные)
-            - not_imp_not_urg: список строк задач (не важные и не срочные)
+            - quadrants: словарь с ключами 'imp_urg', 'imp_not_urg', 
+              'not_imp_urg', 'not_imp_not_urg', каждый содержит список 
+              строк в формате "номер: описание"
     """
-    imp_urg = list(map(lambda task: str(task.number) + ": "+task.description, store.list_tasks_p(1, 1)))
-    imp_not_urg = list(map(lambda task: str(task.number) + ": "+task.description, store.list_tasks_p(1, 0)))
-    not_imp_urg = list(map(lambda task: str(task.number) + ": "+task.description, store.list_tasks_p(0, 1)))
-    not_imp_not_urg = list(map(lambda task: str(task.number) + ": "+task.description, store.list_tasks_p(0, 0)))
+    def format_task(task):
+        """Форматирует задачу в строку для отображения."""
+        return f"{task.number}: {task.description}"
     
-    return {
-        'imp_urg': imp_urg,
-        'imp_not_urg': imp_not_urg,
-        'not_imp_urg': not_imp_urg,
-        'not_imp_not_urg': not_imp_not_urg
+    # Получаем задачи для каждого квадранта
+    quadrants = {
+        'imp_urg': [format_task(task) for task in store.list_tasks_p(1, 1)],
+        'imp_not_urg': [format_task(task) for task in store.list_tasks_p(1, 0)],
+        'not_imp_urg': [format_task(task) for task in store.list_tasks_p(0, 1)],
+        'not_imp_not_urg': [format_task(task) for task in store.list_tasks_p(0, 0)]
     }
+    
+    return {'quadrants': quadrants}
