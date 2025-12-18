@@ -1,9 +1,13 @@
 import argparse
+import logging
 import sys
 
 import tudo.controller as controller
+import tudo.logging_config as logging_config
 import tudo.store as store
 import tudo.view as view
+
+logger = logging.getLogger(__name__)
 
 
 def create_parser():
@@ -62,6 +66,7 @@ def handle_add(store, args):
     """
     if args.prio:
         if len(args.descriptions) % 3 != 0:
+            logger.error("Validation error: incorrect number of arguments for --prio. Expected multiple of 3, got %d", len(args.descriptions))
             view.print_error("Ошибка: при использовании --prio количество аргументов должно быть кратно 3")
             return
         tasks = args.descriptions
@@ -104,12 +109,18 @@ def main(argv=sys.argv):
     Returns:
         Код возврата: 0 при успехе, 1 при ошибке.
     """
+    # Initialize logging configuration
+    logging_config.setup_logging()
+    
     parser = create_parser()
     args = parser.parse_args(argv[1:])
     
     if args.command is None:
         parser.print_help()
         return 1
+    
+    # Log the start of the command
+    logger.info("Starting command: %s", args.command)
     
     task_store = store.TasksStore()
     

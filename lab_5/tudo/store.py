@@ -1,6 +1,9 @@
+import logging
 import sqlite3
 
 from tudo.task import Task
+
+logger = logging.getLogger(__name__)
 
 
 class TasksStore:
@@ -12,6 +15,7 @@ class TasksStore:
         Args:
             db_name: Имя файла базы данных (по умолчанию "database.db").
         """
+        logger.debug("Initializing TasksStore with database: %s", db_name)
         self.conn = sqlite3.connect(db_name, detect_types=sqlite3.PARSE_DECLTYPES)
         self.conn_cursor = self.conn.cursor()
         self.init()
@@ -25,6 +29,7 @@ class TasksStore:
         self.conn_cursor.execute("""INSERT INTO tasks (description, important, urgent) VALUES(?, ?, ?)""",
                                  [description, 0, 0])
         self.conn.commit()
+        logger.info("Successfully added new task: %s", description)
 
     def add_task_p(self, values):
         """Добавляет задачу с приоритетом в базу данных.
@@ -35,6 +40,8 @@ class TasksStore:
         self.conn_cursor.execute("""INSERT INTO tasks (description, important, urgent) VALUES(?, ?, ?)""",
                                  [values[0], int(values[1]), int(values[2])])
         self.conn.commit()
+        logger.info("Successfully added new task with priority: %s (important=%s, urgent=%s)", 
+                   values[0], values[1], values[2])
 
     def list_tasks(self):
         """Возвращает список всех задач из базы данных.
@@ -105,5 +112,6 @@ class TasksStore:
 
     def reset(self):
         """Сбрасывает базу данных, удаляя все задачи."""
+        logger.warning("Resetting database: dropping all tables")
         self.conn_cursor.execute("""DROP TABLE tasks""")
         self.init()

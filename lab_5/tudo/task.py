@@ -1,4 +1,7 @@
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def get_local_timezone():
@@ -31,6 +34,7 @@ def ensure_timezone_aware(dt, tz=None):
     
     if dt.tzinfo is None:
         # Naive datetime - считаем его локальным временем
+        logger.debug("Converting naive datetime to timezone-aware: %s -> %s", dt, tz)
         return dt.replace(tzinfo=tz)
     else:
         # Уже aware datetime - возвращаем как есть
